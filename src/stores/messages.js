@@ -22,5 +22,17 @@ export default defineStore('messages', {
         countUnreadMessagesByChannelId: (state) => (channelId) => {
             return state.findMessagesByChannelId(channelId).filter((message) => message.read === false).length;
         }
+     },
+     actions: {
+        addMessage(channelId, message) {
+            this.messages.push({
+                id: Math.random(),
+                author: 1,
+                channelId,
+                message,
+                timestap: new Date().toLocaleTimeString,
+                read: false
+            })
+        }
      }
 })
