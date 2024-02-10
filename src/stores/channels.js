@@ -1,4 +1,5 @@
 import { defineStore } from "pinia"
+import useMessagesStore from './messages.js'
 
 export default defineStore('channels', {
     state: () => ({
@@ -10,5 +11,22 @@ export default defineStore('channels', {
             { id: 5, name: 'Non-work', messages: null },
             { id: 6, name: 'Atención a clientes', messages: 120 }
         ]
-    })
+    }),
+    getters: {
+        getChannels: (state) => (search) => {
+          const messagesStore = useMessagesStore();
+          return state.channels
+            .filter((channel) =>
+              channel.name.toLocaleLowerCase().includes(search.toLocaleLowerCase())
+            )
+            .map((channel) => {
+              const unreadMessagesCount =
+                messagesStore.countUnreadMessagesByChannelId(channel.id);
+              return {
+                ...channel,
+                messages: unreadMessagesCount,
+              };
+            });
+        },
+      },
 })
